@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import {
   Bar,
   BarChart,
@@ -24,6 +25,12 @@ import { usePayBreakdown } from '@/lib/queries';
 import type { Distribution, GroupStat, PayBreakdown } from '@/lib/types';
 
 const PRIMARY = 'var(--primary)';
+
+// Chart sizing. Horizontal bar charts grow with the number of rows so bars stay
+// readable; the distribution chart has a fixed height.
+const DISTRIBUTION_CHART_HEIGHT = 280;
+const GROUP_BAR_ROW_HEIGHT = 34;
+const MIN_GROUP_CHART_HEIGHT = 220;
 
 export function InsightsPage() {
   const query = usePayBreakdown();
@@ -104,12 +111,16 @@ function DistributionStats({ distribution }: { distribution: Distribution }) {
 }
 
 function DistributionChart({ distribution }: { distribution: Distribution }) {
-  const data = distribution.histogram.map((bucket) => ({
-    label: formatUsdCompact(bucket.fromUsdMinor),
-    count: bucket.count,
-  }));
+  const data = useMemo(
+    () =>
+      distribution.histogram.map((bucket) => ({
+        label: formatUsdCompact(bucket.fromUsdMinor),
+        count: bucket.count,
+      })),
+    [distribution.histogram],
+  );
   return (
-    <ResponsiveContainer width="100%" height={280}>
+    <ResponsiveContainer width="100%" height={DISTRIBUTION_CHART_HEIGHT}>
       <BarChart data={data} margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
         <XAxis dataKey="label" fontSize={12} tickLine={false} stroke="var(--muted-foreground)" />
@@ -130,9 +141,15 @@ function DistributionChart({ distribution }: { distribution: Distribution }) {
 }
 
 function GroupBarChart({ groups }: { groups: GroupStat[] }) {
-  const data = groups.map((group) => ({ key: group.key, median: group.medianUsdMinor }));
+  const data = useMemo(
+    () => groups.map((group) => ({ key: group.key, median: group.medianUsdMinor })),
+    [groups],
+  );
   return (
-    <ResponsiveContainer width="100%" height={Math.max(220, data.length * 34)}>
+    <ResponsiveContainer
+      width="100%"
+      height={Math.max(MIN_GROUP_CHART_HEIGHT, data.length * GROUP_BAR_ROW_HEIGHT)}
+    >
       <BarChart data={data} layout="vertical" margin={{ top: 4, right: 16, bottom: 4, left: 8 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" horizontal={false} />
         <XAxis
@@ -166,7 +183,10 @@ function GroupBarChart({ groups }: { groups: GroupStat[] }) {
 
 function LevelBands({ levels }: { levels: GroupStat[] }) {
   // Show in band order (junior -> senior) by median, so the ladder reads top-down.
-  const ordered = [...levels].sort((a, b) => a.medianUsdMinor - b.medianUsdMinor);
+  const ordered = useMemo(
+    () => [...levels].sort((a, b) => a.medianUsdMinor - b.medianUsdMinor),
+    [levels],
+  );
   return (
     <Table>
       <TableHeader>
