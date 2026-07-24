@@ -9,7 +9,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends openssl && rm -
 COPY package*.json ./
 COPY apps/api/package.json apps/api/
 COPY apps/web/package.json apps/web/
-RUN npm ci
+# Resolve a fresh dependency tree for the image's own platform. A lockfile
+# generated on another OS omits that platform's optional rollup/esbuild native
+# binaries (npm/cli#4828), so we drop it here and let npm install the right ones.
+RUN rm -f package-lock.json && npm install --no-audit --no-fund
 
 COPY . .
 RUN npx prisma generate --schema apps/api/prisma/schema.prisma \
@@ -26,6 +29,8 @@ COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/apps/api/package.json ./apps/api/package.json
 COPY --from=build /app/apps/api/dist ./apps/api/dist
 COPY --from=build /app/apps/api/prisma ./apps/api/prisma
+# The seed runs via tsx and imports pure domain helpers from src, so it ships too.
+COPY --from=build /app/apps/api/src ./apps/api/src
 COPY --from=build /app/apps/web/dist ./apps/web/dist
 COPY docker-entrypoint.sh ./
 
