@@ -92,3 +92,24 @@ describe('GET /employees/:id', () => {
     expect(body.error).toBe('NotFound');
   });
 });
+
+describe('GET /employees — remaining filters and sorts', () => {
+  it('filters by country', async () => {
+    const { body } = await get('/employees?country=JP');
+    expect(body.total).toBe(1);
+    expect(body.data[0].lastName).toBe('Dubois');
+  });
+
+  it('filters by level', async () => {
+    await seedEmployee(ctx.prisma, { lastName: 'Elder', level: 'L5' });
+    const { body } = await get('/employees?level=L5');
+    expect(body.total).toBe(1);
+    expect(body.data[0].lastName).toBe('Elder');
+  });
+
+  it('sorts by hire date', async () => {
+    const { status, body } = await get('/employees?sort=hireDate&order=desc');
+    expect(status).toBe(200);
+    expect(body.data.length).toBeGreaterThan(0);
+  });
+});

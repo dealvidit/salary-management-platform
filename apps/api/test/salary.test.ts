@@ -89,4 +89,14 @@ describe('POST /employees/:id/salary-revisions', () => {
     const res = await post(999_999, { amountMinor: 100, effectiveOn: '2025-01-01', reason: 'x' });
     expect(res.statusCode).toBe(404);
   });
+
+  it('fails cleanly when the employee currency has no configured FX rate', async () => {
+    const employee = await seedEmployee(ctx.prisma, { currency: 'ZZZ' });
+    const res = await post(employee.id, {
+      amountMinor: 1_000,
+      effectiveOn: '2025-01-01',
+      reason: 'x',
+    });
+    expect(res.statusCode).toBe(500);
+  });
 });
