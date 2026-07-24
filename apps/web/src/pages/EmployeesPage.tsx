@@ -210,6 +210,7 @@ function FilterSelect({
       aria-label={`Filter by ${label.toLowerCase()}`}
       value={value}
       onChange={(e) => onChange(e.target.value)}
+      onClear={value ? () => onChange('') : undefined}
       className="w-40"
     >
       <option value="">{label}: All</option>
