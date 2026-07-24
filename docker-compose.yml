@@ -1,0 +1,26 @@
+# One-command run: `docker compose up --build` then open http://localhost:3000
+services:
+  app:
+    build: .
+    ports:
+      - '3000:3000'
+    volumes:
+      # Persist the SQLite database across restarts.
+      - salary-data:/app/data
+    environment:
+      # The API and SPA share this origin, so CORS can be same-origin.
+      CORS_ORIGIN: http://localhost:3000
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  salary-data:
