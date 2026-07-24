@@ -1,3 +1,4 @@
+import 'dotenv/config'; // load apps/api/.env before we read configuration
 import { loadConfig } from './config.js';
 import { createPrismaClient } from './prisma.js';
 import { buildServer } from './server.js';
