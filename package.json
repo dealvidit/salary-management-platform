@@ -1,0 +1,30 @@
+{
+  "name": "salary-management-platform",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Internal salary management tool for ACME's HR manager",
+  "workspaces": ["apps/*"],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,green \"npm -w apps/api run dev\" \"npm -w apps/web run dev\"",
+    "build": "npm -w apps/api run build && npm -w apps/web run build",
+    "test": "npm -w apps/api run test && npm -w apps/web run test",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "db:migrate": "npm -w apps/api run db:migrate",
+    "db:seed": "npm -w apps/api run db:seed",
+    "setup": "npm install && npm -w apps/api run db:reset"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "concurrently": "^9.1.0",
+    "eslint": "^9.17.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.0"
+  }
+}

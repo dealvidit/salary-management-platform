@@ -16,6 +16,8 @@ apps/api/prisma/*.db-journal
 .env
 .env.local
 *.local
+# ...except the api's local defaults, which hold no secrets (see docs/decisions.md)
+!apps/api/.env
 
 # editor / OS
 .DS_Store

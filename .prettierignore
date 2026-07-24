@@ -1,0 +1,6 @@
+dist
+build
+coverage
+node_modules
+apps/api/prisma/migrations
+*.db
