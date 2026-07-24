@@ -6,6 +6,7 @@ import { EmployeeDetailPage } from './pages/EmployeeDetailPage';
 import { EmployeesPage } from './pages/EmployeesPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { Placeholder } from './pages/placeholder';
+import { UpdateSalaryPage } from './pages/UpdateSalaryPage';
 
 export function App() {
   return (
@@ -16,7 +17,7 @@ export function App() {
             <Route index element={<Placeholder title="Dashboard" />} />
             <Route path="employees" element={<EmployeesPage />} />
             <Route path="employees/:id" element={<EmployeeDetailPage />} />
-            <Route path="employees/:id/salary" element={<Placeholder title="Update salary" />} />
+            <Route path="employees/:id/salary" element={<UpdateSalaryPage />} />
             <Route path="insights" element={<Placeholder title="Insights" />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
