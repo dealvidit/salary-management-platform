@@ -1,5 +1,4 @@
 import { ArrowDown, ArrowUp, ChevronsUpDown, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { EmptyState, ErrorState, PageHeader } from '@/components/states';
 import { Badge } from '@/components/ui/badge';
@@ -17,59 +16,29 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatMoney, formatUsd } from '@/lib/format';
 import { useEmployees, useMeta } from '@/lib/queries';
-import { useDebouncedValue } from '@/lib/use-debounced-value';
-import type { ListEmployeesParams } from '@/lib/types';
-
-const PAGE_SIZE = 25;
-type SortField = NonNullable<ListEmployeesParams['sort']>;
-
-interface Filters {
-  department: string;
-  country: string;
-  level: string;
-}
-
-const EMPTY_FILTERS: Filters = { department: '', country: '', level: '' };
+import {
+  EMPLOYEE_PAGE_SIZE,
+  useEmployeeListState,
+  type SortField,
+} from '@/lib/use-employee-list-state';
 
 export function EmployeesPage() {
-  const [search, setSearch] = useState('');
-  const debouncedSearch = useDebouncedValue(search);
-  const [filters, setFilters] = useState<Filters>(EMPTY_FILTERS);
-  const [sort, setSort] = useState<{ field: SortField; order: 'asc' | 'desc' }>({
-    field: 'name',
-    order: 'asc',
-  });
-  const [page, setPage] = useState(1);
-
-  // Any change to what we're looking at should send us back to the first page.
-  useEffect(() => setPage(1), [debouncedSearch, filters, sort]);
+  const {
+    search,
+    setSearch,
+    filters,
+    setFilter,
+    sort,
+    toggleSort,
+    page,
+    setPage,
+    hasFilters,
+    clearAll,
+    params,
+  } = useEmployeeListState();
 
   const meta = useMeta();
-  const employees = useEmployees({
-    page,
-    pageSize: PAGE_SIZE,
-    search: debouncedSearch || undefined,
-    department: filters.department || undefined,
-    country: filters.country || undefined,
-    level: filters.level || undefined,
-    sort: sort.field,
-    order: sort.order,
-  });
-
-  const hasFilters = search !== '' || filters.department || filters.country || filters.level;
-
-  function toggleSort(field: SortField) {
-    setSort((current) =>
-      current.field === field
-        ? { field, order: current.order === 'asc' ? 'desc' : 'asc' }
-        : { field, order: field === 'salary' ? 'desc' : 'asc' },
-    );
-  }
-
-  function clearAll() {
-    setSearch('');
-    setFilters(EMPTY_FILTERS);
-  }
+  const employees = useEmployees(params);
 
   const total = employees.data?.total ?? 0;
 
@@ -95,19 +64,19 @@ export function EmployeesPage() {
           label="Department"
           value={filters.department}
           options={meta.data?.departments}
-          onChange={(department) => setFilters((f) => ({ ...f, department }))}
+          onChange={(value) => setFilter('department', value)}
         />
         <FilterSelect
           label="Country"
           value={filters.country}
           options={meta.data?.countries}
-          onChange={(country) => setFilters((f) => ({ ...f, country }))}
+          onChange={(value) => setFilter('country', value)}
         />
         <FilterSelect
           label="Level"
           value={filters.level}
           options={meta.data?.levels}
-          onChange={(level) => setFilters((f) => ({ ...f, level }))}
+          onChange={(value) => setFilter('level', value)}
         />
         {hasFilters && (
           <Button variant="ghost" size="sm" onClick={clearAll}>
@@ -187,8 +156,8 @@ export function EmployeesPage() {
         </div>
       )}
 
-      {total > PAGE_SIZE && (
-        <Pagination page={page} pageSize={PAGE_SIZE} total={total} onChange={setPage} />
+      {total > EMPLOYEE_PAGE_SIZE && (
+        <Pagination page={page} pageSize={EMPLOYEE_PAGE_SIZE} total={total} onChange={setPage} />
       )}
     </>
   );
