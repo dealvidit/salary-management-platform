@@ -1,6 +1,8 @@
 import cors from '@fastify/cors';
 import Fastify, { type FastifyInstance } from 'fastify';
 import type { Config } from './config.js';
+import { setupErrorHandler } from './lib/errors.js';
+import { registerEmployeeRoutes } from './modules/employees/employees.routes.js';
 import type { PrismaClient } from './prisma.js';
 import { registerHealthRoutes } from './routes/health.js';
 
@@ -20,7 +22,9 @@ export function buildServer({ config, prisma }: ServerDeps): FastifyInstance {
 
   app.decorate('prisma', prisma);
 
+  setupErrorHandler(app);
   registerHealthRoutes(app);
+  registerEmployeeRoutes(app);
 
   return app;
 }
