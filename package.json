@@ -20,7 +20,8 @@
     "format:check": "prettier --check .",
     "db:migrate": "npm -w apps/api run db:migrate",
     "db:seed": "npm -w apps/api run db:seed",
-    "setup": "npm install && npm -w apps/api run db:reset"
+    "setup": "npm install && npm -w apps/api run db:reset",
+    "test:coverage": "npm -w apps/api run test:coverage && npm -w apps/web run test:coverage"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
