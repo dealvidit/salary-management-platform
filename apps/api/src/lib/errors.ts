@@ -9,6 +9,14 @@ export class NotFoundError extends Error {
   }
 }
 
+/** Base for business-rule violations that should surface as HTTP 400. */
+export class BadRequestError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'BadRequestError';
+  }
+}
+
 // One place that turns known error types into HTTP responses, so route handlers
 // stay focused on the happy path. Validation failures become 400s with the
 // offending fields; missing resources become 404s.
@@ -27,6 +35,10 @@ export function setupErrorHandler(app: FastifyInstance): void {
 
     if (error instanceof NotFoundError) {
       return reply.status(404).send({ error: 'NotFound', message: error.message });
+    }
+
+    if (error instanceof BadRequestError) {
+      return reply.status(400).send({ error: 'BadRequest', message: error.message });
     }
 
     request.log.error(error);
