@@ -1,0 +1,11 @@
+// Data model lives here. Bootstrap commit sets up the datasource + client only;
+// the Employee / SalaryRevision / FxRate models land in the schema step.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
