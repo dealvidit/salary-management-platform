@@ -2,6 +2,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { queryClient } from './app/query-client';
 import { Layout } from './components/layout';
+import { DashboardPage } from './pages/DashboardPage';
 import { EmployeeDetailPage } from './pages/EmployeeDetailPage';
 import { EmployeesPage } from './pages/EmployeesPage';
 import { NotFoundPage } from './pages/NotFoundPage';
@@ -14,7 +15,7 @@ export function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<Layout />}>
-            <Route index element={<Placeholder title="Dashboard" />} />
+            <Route index element={<DashboardPage />} />
             <Route path="employees" element={<EmployeesPage />} />
             <Route path="employees/:id" element={<EmployeeDetailPage />} />
             <Route path="employees/:id/salary" element={<UpdateSalaryPage />} />
