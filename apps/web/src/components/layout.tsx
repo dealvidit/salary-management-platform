@@ -45,8 +45,9 @@ function NavItems({ onNavigate }: { onNavigate?: () => void }) {
 export function Layout() {
   return (
     <div className="min-h-screen md:grid md:grid-cols-[240px_1fr]">
-      {/* Sidebar on desktop, top bar on mobile. */}
-      <aside className="border-b border-border bg-card md:border-b-0 md:border-r">
+      {/* Sidebar on desktop, top bar on mobile. Pinned on desktop so it stays in
+          place while the main content scrolls, scrolling itself only if needed. */}
+      <aside className="border-b border-border bg-card md:sticky md:top-0 md:h-screen md:self-start md:overflow-y-auto md:border-b-0 md:border-r">
         <div className="flex items-center gap-2 p-5">
           <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-sm font-bold text-primary-foreground">
             A
