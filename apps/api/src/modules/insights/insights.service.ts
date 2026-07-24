@@ -11,7 +11,13 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 // percentiles into SQL, and fast enough to not matter. See docs/performance.md.
 async function loadSalaryRows(prisma: PrismaClient): Promise<SalaryRow[]> {
   const rows = await prisma.employee.findMany({
-    select: { department: true, level: true, country: true, currency: true, currentSalaryUsdMinor: true },
+    select: {
+      department: true,
+      level: true,
+      country: true,
+      currency: true,
+      currentSalaryUsdMinor: true,
+    },
   });
   return rows.map((row) => ({
     department: row.department,

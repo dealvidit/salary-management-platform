@@ -19,14 +19,20 @@ export function TableBody({ className, ...props }: HTMLAttributes<HTMLTableSecti
 
 export function TableRow({ className, ...props }: HTMLAttributes<HTMLTableRowElement>) {
   return (
-    <tr className={cn('border-b border-border transition-colors hover:bg-muted/50', className)} {...props} />
+    <tr
+      className={cn('border-b border-border transition-colors hover:bg-muted/50', className)}
+      {...props}
+    />
   );
 }
 
 export function TableHead({ className, ...props }: ThHTMLAttributes<HTMLTableCellElement>) {
   return (
     <th
-      className={cn('h-11 px-4 text-left align-middle font-medium text-muted-foreground', className)}
+      className={cn(
+        'h-11 px-4 text-left align-middle font-medium text-muted-foreground',
+        className,
+      )}
       {...props}
     />
   );

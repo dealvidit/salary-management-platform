@@ -113,7 +113,12 @@ function DistributionChart({ distribution }: { distribution: Distribution }) {
       <BarChart data={data} margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
         <XAxis dataKey="label" fontSize={12} tickLine={false} stroke="var(--muted-foreground)" />
-        <YAxis fontSize={12} tickLine={false} stroke="var(--muted-foreground)" allowDecimals={false} />
+        <YAxis
+          fontSize={12}
+          tickLine={false}
+          stroke="var(--muted-foreground)"
+          allowDecimals={false}
+        />
         <Tooltip
           cursor={{ fill: 'var(--muted)' }}
           formatter={(value: number) => [value.toLocaleString(), 'People']}
@@ -137,7 +142,14 @@ function GroupBarChart({ groups }: { groups: GroupStat[] }) {
           stroke="var(--muted-foreground)"
           tickFormatter={(value: number) => formatUsdCompact(value)}
         />
-        <YAxis type="category" dataKey="key" width={90} fontSize={12} tickLine={false} stroke="var(--muted-foreground)" />
+        <YAxis
+          type="category"
+          dataKey="key"
+          width={90}
+          fontSize={12}
+          tickLine={false}
+          stroke="var(--muted-foreground)"
+        />
         <Tooltip
           cursor={{ fill: 'var(--muted)' }}
           formatter={(value: number) => [formatUsd(value), 'Median']}
@@ -177,7 +189,9 @@ function LevelBands({ levels }: { levels: GroupStat[] }) {
               <TableCell className="text-right text-muted-foreground">
                 {formatUsd(level.minUsdMinor)}
               </TableCell>
-              <TableCell className="text-right font-medium">{formatUsd(level.medianUsdMinor)}</TableCell>
+              <TableCell className="text-right font-medium">
+                {formatUsd(level.medianUsdMinor)}
+              </TableCell>
               <TableCell className="text-right text-muted-foreground">
                 {formatUsd(level.maxUsdMinor)}
               </TableCell>

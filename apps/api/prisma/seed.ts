@@ -59,12 +59,18 @@ function daysAgo(days: number): Date {
 // --- salary + history ---------------------------------------------------------
 
 /** Current salary in local major units, with within-band spread and rare outliers. */
-function currentSalary(rng: () => number, country: Country, dept: Department, level: Level): number {
+function currentSalary(
+  rng: () => number,
+  country: Country,
+  dept: Department,
+  level: Level,
+): number {
   const anchor = country.baseAnnual * dept.multiplier * level.multiplier;
   let amount = anchor * (0.82 + rng() * 0.36); // ±~18% spread within a band
 
   const roll = rng();
-  if (roll < 0.02) amount *= 0.68; // clearly underpaid — gives outlier insights signal
+  if (roll < 0.02)
+    amount *= 0.68; // clearly underpaid — gives outlier insights signal
   else if (roll > 0.98) amount *= 1.4; // clearly overpaid
 
   return roundToStep(amount, salaryStep(country.currency));

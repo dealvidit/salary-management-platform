@@ -48,7 +48,9 @@ export function UpdateSalaryPage() {
       </Link>
 
       {query.isLoading && <Skeleton className="h-80 max-w-xl" />}
-      {query.isError && <ErrorState message="Couldn’t load this employee." onRetry={() => query.refetch()} />}
+      {query.isError && (
+        <ErrorState message="Couldn’t load this employee." onRetry={() => query.refetch()} />
+      )}
       {query.data && <UpdateSalaryForm employee={query.data} />}
     </>
   );

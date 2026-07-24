@@ -38,5 +38,9 @@ export function formatUsdCompact(usdMinor: number): string {
 }
 
 export function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' });
+  return new Date(iso).toLocaleDateString('en', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
 }

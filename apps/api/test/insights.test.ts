@@ -10,9 +10,21 @@ beforeAll(async () => {
     data: { currency: 'USD', usdPerUnit: 1, effectiveOn: new Date('2026-07-01') },
   });
   // Known population: Engineering totals more than Sales.
-  await seedEmployee(ctx.prisma, { department: 'Engineering', country: 'US', currentSalaryUsdMinor: 10_000_000 });
-  await seedEmployee(ctx.prisma, { department: 'Engineering', country: 'US', currentSalaryUsdMinor: 20_000_000 });
-  await seedEmployee(ctx.prisma, { department: 'Sales', country: 'IN', currentSalaryUsdMinor: 6_000_000 });
+  await seedEmployee(ctx.prisma, {
+    department: 'Engineering',
+    country: 'US',
+    currentSalaryUsdMinor: 10_000_000,
+  });
+  await seedEmployee(ctx.prisma, {
+    department: 'Engineering',
+    country: 'US',
+    currentSalaryUsdMinor: 20_000_000,
+  });
+  await seedEmployee(ctx.prisma, {
+    department: 'Sales',
+    country: 'IN',
+    currentSalaryUsdMinor: 6_000_000,
+  });
 });
 
 afterAll(() => ctx.cleanup());

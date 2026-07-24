@@ -290,12 +290,7 @@ function Pagination({
         {total.toLocaleString()}
       </p>
       <div className="flex items-center gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          disabled={page <= 1}
-          onClick={() => onChange(page - 1)}
-        >
+        <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => onChange(page - 1)}>
           Previous
         </Button>
         <span className="text-muted-foreground">

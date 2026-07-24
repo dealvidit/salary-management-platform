@@ -13,10 +13,7 @@ export function DashboardPage() {
 
   return (
     <>
-      <PageHeader
-        title="Dashboard"
-        description="How the org pays people, at a glance."
-      />
+      <PageHeader title="Dashboard" description="How the org pays people, at a glance." />
 
       {query.isError && (
         <ErrorState message="Couldn’t load the dashboard." onRetry={() => query.refetch()} />

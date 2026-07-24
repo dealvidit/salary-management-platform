@@ -112,13 +112,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-function SalaryHistory({
-  history,
-  currency,
-}: {
-  history: SalaryHistoryEntry[];
-  currency: string;
-}) {
+function SalaryHistory({ history, currency }: { history: SalaryHistoryEntry[]; currency: string }) {
   return (
     <Table>
       <TableHeader>
@@ -157,7 +151,9 @@ function ChangeIndicator({ delta, currency }: { delta: number | null; currency: 
   const up = delta > 0;
   const Icon = up ? TrendingUp : TrendingDown;
   return (
-    <span className={`inline-flex items-center gap-1 ${up ? 'text-green-600' : 'text-destructive'}`}>
+    <span
+      className={`inline-flex items-center gap-1 ${up ? 'text-green-600' : 'text-destructive'}`}
+    >
       <Icon className="h-3.5 w-3.5" />
       {up ? '+' : '−'}
       {formatMoney(Math.abs(delta), currency)}

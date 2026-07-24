@@ -42,6 +42,8 @@ export function setupErrorHandler(app: FastifyInstance): void {
     }
 
     request.log.error(error);
-    return reply.status(500).send({ error: 'InternalServerError', message: 'Something went wrong' });
+    return reply
+      .status(500)
+      .send({ error: 'InternalServerError', message: 'Something went wrong' });
   });
 }

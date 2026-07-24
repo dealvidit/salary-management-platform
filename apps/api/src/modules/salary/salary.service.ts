@@ -31,7 +31,11 @@ export async function updateSalary(
   assertValidEffectiveDate(input.effectiveOn, employee.currentSalaryEffectiveOn, now);
 
   const usdPerUnit = await latestUsdRate(prisma, employee.currency);
-  const currentSalaryUsdMinor = normalizeToUsdMinor(input.amountMinor, employee.currency, usdPerUnit);
+  const currentSalaryUsdMinor = normalizeToUsdMinor(
+    input.amountMinor,
+    employee.currency,
+    usdPerUnit,
+  );
 
   await prisma.$transaction([
     prisma.salaryRevision.create({

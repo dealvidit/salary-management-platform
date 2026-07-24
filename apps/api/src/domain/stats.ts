@@ -35,7 +35,16 @@ function percentileOfSorted(sorted: number[], p: number): number {
 
 export function summarize(values: number[]): Summary {
   if (values.length === 0) {
-    return { count: 0, min: null, max: null, mean: null, median: null, p25: null, p75: null, p90: null };
+    return {
+      count: 0,
+      min: null,
+      max: null,
+      mean: null,
+      median: null,
+      p25: null,
+      p75: null,
+      p90: null,
+    };
   }
 
   const sorted = [...values].sort((a, b) => a - b);

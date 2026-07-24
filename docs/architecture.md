@@ -62,21 +62,21 @@ money is multi-currency, and salary is a history, not a value.
 Identity + the slicing dimensions for insights, plus a **maintained projection**
 of current pay.
 
-| column                     | why                                            |
-| -------------------------- | ---------------------------------------------- |
-| `id`                       | PK, int autoincrement — readable internal URLs |
-| `employeeNumber`           | human-facing code (EMP00042), unique, stable   |
-| `firstName`, `lastName`    | display + search                               |
-| `email`                    | unique, display                                |
-| `country`                  | ISO-3166 alpha-2; a slicing dimension          |
-| `currency`                 | ISO-4217; fixed per employee in our scope      |
-| `department`, `level`      | the two main insight dimensions                |
-| `jobTitle`                 | display                                        |
-| `hireDate`                 | tenure context                                 |
-| `currentSalaryMinor`       | **projection**: current pay in local minor units — display |
+| column                     | why                                                                   |
+| -------------------------- | --------------------------------------------------------------------- |
+| `id`                       | PK, int autoincrement — readable internal URLs                        |
+| `employeeNumber`           | human-facing code (EMP00042), unique, stable                          |
+| `firstName`, `lastName`    | display + search                                                      |
+| `email`                    | unique, display                                                       |
+| `country`                  | ISO-3166 alpha-2; a slicing dimension                                 |
+| `currency`                 | ISO-4217; fixed per employee in our scope                             |
+| `department`, `level`      | the two main insight dimensions                                       |
+| `jobTitle`                 | display                                                               |
+| `hireDate`                 | tenure context                                                        |
+| `currentSalaryMinor`       | **projection**: current pay in local minor units — display            |
 | `currentSalaryUsdMinor`    | **projection**: current pay normalized to USD — sort/filter/aggregate |
-| `currentSalaryEffectiveOn` | date the current amount took effect            |
-| `createdAt`, `updatedAt`   | housekeeping                                    |
+| `currentSalaryEffectiveOn` | date the current amount took effect                                   |
+| `createdAt`, `updatedAt`   | housekeeping                                                          |
 
 The two `currentSalary*` columns are a projection of "the latest revision,"
 written in the same transaction as the revision. Why denormalize:
@@ -98,14 +98,14 @@ be recomputed in a batch. That recompute path is documented, not built.
 
 Append-only. The audit trail and the source of truth for pay.
 
-| column           | why                                                    |
-| ---------------- | ------------------------------------------------------ |
-| `id`             | PK                                                     |
-| `employeeId`     | FK → Employee                                          |
-| `amountMinor`    | salary in **local minor units** (integer, never float)|
-| `effectiveOn`    | when this pay takes effect                             |
-| `reason`         | why it changed (promotion, market adj, correction…)   |
-| `createdAt`      | when it was recorded                                   |
+| column        | why                                                    |
+| ------------- | ------------------------------------------------------ |
+| `id`          | PK                                                     |
+| `employeeId`  | FK → Employee                                          |
+| `amountMinor` | salary in **local minor units** (integer, never float) |
+| `effectiveOn` | when this pay takes effect                             |
+| `reason`      | why it changed (promotion, market adj, correction…)    |
+| `createdAt`   | when it was recorded                                   |
 
 No `UPDATE`, no `DELETE` — a correction is a new revision. Currency isn't
 repeated here; it lives on the (immutable-in-scope) employee.
@@ -115,11 +115,11 @@ repeated here; it lives on the (immutable-in-scope) employee.
 One row per currency: how many USD minor units one local unit is worth, as of a
 date. Seeded, versioned by `effectiveOn`. Insights use the latest set.
 
-| column        | why                                              |
-| ------------- | ------------------------------------------------ |
-| `currency`    | ISO-4217                                         |
-| `usdPerUnit`  | conversion factor (stored with enough precision) |
-| `effectiveOn` | rate date — shown next to every normalized figure|
+| column        | why                                               |
+| ------------- | ------------------------------------------------- |
+| `currency`    | ISO-4217                                          |
+| `usdPerUnit`  | conversion factor (stored with enough precision)  |
+| `effectiveOn` | rate date — shown next to every normalized figure |
 
 ### Money: integers, not floats
 
@@ -144,14 +144,14 @@ intent and are what we'd ship at real scale. Called out honestly in
 
 REST, small and boring.
 
-| method + path                          | purpose                                  |
-| -------------------------------------- | ---------------------------------------- |
+| method + path                          | purpose                                                 |
+| -------------------------------------- | ------------------------------------------------------- |
 | `GET /employees`                       | paginated list; filter dept/country/level, search, sort |
-| `GET /employees/:id`                   | detail + salary-revision history         |
-| `POST /employees/:id/salary-revisions` | update salary (append revision)          |
-| `GET /insights/summary`                | dashboard numbers                        |
-| `GET /insights/pay`                    | breakdowns by dept/level/country + distribution |
-| `GET /meta`                            | filter option lists (depts, countries, levels) |
+| `GET /employees/:id`                   | detail + salary-revision history                        |
+| `POST /employees/:id/salary-revisions` | update salary (append revision)                         |
+| `GET /insights/summary`                | dashboard numbers                                       |
+| `GET /insights/pay`                    | breakdowns by dept/level/country + distribution         |
+| `GET /meta`                            | filter option lists (depts, countries, levels)          |
 
 Pagination is offset/limit — correct and obvious for a page-numbered HR list.
 Responses carry `total` so the UI can render page counts. Cursor pagination is

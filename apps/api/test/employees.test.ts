@@ -7,9 +7,21 @@ let ctx: TestContext;
 beforeAll(async () => {
   ctx = createTestContext();
   // A small, known population spanning departments and currencies.
-  await seedEmployee(ctx.prisma, { lastName: 'Ashwin', department: 'Engineering', currentSalaryUsdMinor: 9_000_000 });
-  await seedEmployee(ctx.prisma, { lastName: 'Bianchi', department: 'Sales', currentSalaryUsdMinor: 6_000_000 });
-  await seedEmployee(ctx.prisma, { lastName: 'Costa', department: 'Engineering', currentSalaryUsdMinor: 12_000_000 });
+  await seedEmployee(ctx.prisma, {
+    lastName: 'Ashwin',
+    department: 'Engineering',
+    currentSalaryUsdMinor: 9_000_000,
+  });
+  await seedEmployee(ctx.prisma, {
+    lastName: 'Bianchi',
+    department: 'Sales',
+    currentSalaryUsdMinor: 6_000_000,
+  });
+  await seedEmployee(ctx.prisma, {
+    lastName: 'Costa',
+    department: 'Engineering',
+    currentSalaryUsdMinor: 12_000_000,
+  });
   // Local amount is huge (JPY) but normalized value is the smallest — proves we
   // sort on the normalized figure, not the raw local number.
   await seedEmployee(ctx.prisma, {

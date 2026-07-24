@@ -23,7 +23,11 @@ const employee: EmployeeDetail = {
   currency: 'USD',
   email: 'ada@acme.example',
   hireDate: '2020-01-01T00:00:00.000Z',
-  currentSalary: { amountMinor: 12_000_000, usdMinor: 12_000_000, effectiveOn: '2024-01-01T00:00:00.000Z' },
+  currentSalary: {
+    amountMinor: 12_000_000,
+    usdMinor: 12_000_000,
+    effectiveOn: '2024-01-01T00:00:00.000Z',
+  },
   salaryHistory: [],
 };
 
