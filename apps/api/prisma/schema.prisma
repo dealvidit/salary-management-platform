@@ -1,0 +1,69 @@
+// Three tables. Two ideas drive the shape (see docs/architecture.md):
+//   1. Money is multi-currency: stored in local minor units + a normalized USD
+//      projection so figures are comparable across countries.
+//   2. Salary is a history, not a value: changes are append-only revisions and
+//      the current amount on Employee is a maintained projection of the latest.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Employee {
+  id             Int    @id @default(autoincrement())
+  employeeNumber String @unique // human-facing code, e.g. EMP00042
+  firstName      String
+  lastName       String
+  email          String @unique
+
+  country  String // ISO-3166 alpha-2, e.g. "IN"
+  currency String // ISO-4217, e.g. "INR"; fixed per employee in our scope
+
+  department String
+  level      String
+  jobTitle   String
+  hireDate   DateTime
+
+  // Projection of the latest salary revision, maintained transactionally.
+  // `Minor` is the local amount in minor units; `UsdMinor` is normalized to USD
+  // cents and is the key we sort, filter and aggregate on across currencies.
+  currentSalaryMinor       Int
+  currentSalaryUsdMinor    Int
+  currentSalaryEffectiveOn DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  revisions SalaryRevision[]
+
+  @@index([department])
+  @@index([country])
+  @@index([level])
+  @@index([currentSalaryUsdMinor]) // sort-by-pay; normalized so it's comparable
+}
+
+model SalaryRevision {
+  id          Int      @id @default(autoincrement())
+  employeeId  Int
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  amountMinor Int // local currency, minor units — the employee holds the currency
+  effectiveOn DateTime
+  reason      String
+  createdAt   DateTime @default(now())
+
+  @@index([employeeId, effectiveOn]) // history fetch + "latest revision" lookup
+}
+
+model FxRate {
+  id          Int      @id @default(autoincrement())
+  currency    String
+  usdPerUnit  Float // USD per 1 major local unit; single round at the boundary
+  effectiveOn DateTime
+  createdAt   DateTime @default(now())
+
+  @@unique([currency, effectiveOn])
+}

@@ -1,0 +1,10 @@
+node_modules
+**/node_modules
+**/dist
+**/build
+**/*.db
+**/*.db-journal
+.git
+coverage
+*.log
+Salary Management Assessment- Candidates.pdf
