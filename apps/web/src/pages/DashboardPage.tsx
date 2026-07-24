@@ -1,6 +1,5 @@
 import { Building2, Coins, Globe2, TrendingUp, Users } from 'lucide-react';
 import type { ComponentType, ReactNode } from 'react';
-import { Link } from 'react-router-dom';
 import { ErrorState, PageHeader } from '@/components/states';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -51,21 +50,18 @@ function Dashboard({ summary }: { summary: DashboardSummary }) {
               ? `${formatUsdCompact(summary.mostExpensiveDepartment.totalUsdMinor)} in annual pay`
               : 'No data yet'
           }
-          to="/insights"
         />
         <HighlightCard
           icon={TrendingUp}
           label={`Salary changes (last ${summary.recentWindowDays} days)`}
           primary={summary.recentChangeCount.toLocaleString()}
           secondary="Raises and adjustments recorded"
-          to="/employees"
         />
         <HighlightCard
           icon={Globe2}
           label="Countries"
           primary={summary.countryCount.toLocaleString()}
           secondary="Currencies normalized to USD"
-          to="/insights"
         />
       </div>
 
@@ -110,26 +106,22 @@ function HighlightCard({
   label,
   primary,
   secondary,
-  to,
 }: {
   icon: ComponentType<{ className?: string }>;
   label: string;
   primary: ReactNode;
   secondary: string;
-  to: string;
 }) {
   return (
-    <Link to={to} className="group">
-      <Card className="h-full transition-colors group-hover:border-primary/40">
-        <CardContent className="space-y-1 pt-5">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Icon className="h-4 w-4" /> {label}
-          </div>
-          <p className="text-xl font-semibold">{primary}</p>
-          <p className="text-sm text-muted-foreground">{secondary}</p>
-        </CardContent>
-      </Card>
-    </Link>
+    <Card className="h-full">
+      <CardContent className="space-y-1 pt-5">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Icon className="h-4 w-4" /> {label}
+        </div>
+        <p className="text-xl font-semibold">{primary}</p>
+        <p className="text-sm text-muted-foreground">{secondary}</p>
+      </CardContent>
+    </Card>
   );
 }
 
