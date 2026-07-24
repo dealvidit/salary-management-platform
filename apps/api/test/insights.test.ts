@@ -17,8 +17,8 @@ beforeAll(async () => {
 
 afterAll(() => ctx.cleanup());
 
-async function get(url: string) {
-  const res = await ctx.app.inject({ method: 'GET', url });
+async function get(path: string) {
+  const res = await ctx.app.inject({ method: 'GET', url: `/api${path}` });
   return { status: res.statusCode, body: res.json() };
 }
 

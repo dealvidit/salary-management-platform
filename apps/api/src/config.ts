@@ -8,6 +8,9 @@ const schema = z.object({
   PORT: z.coerce.number().int().positive().default(3000),
   DATABASE_URL: z.string().min(1),
   CORS_ORIGIN: z.string().default('http://localhost:5173'),
+  // When set (production), the API also serves the built frontend from this path
+  // so the whole app runs from a single origin.
+  WEB_DIST_PATH: z.string().optional(),
 });
 
 export type Config = z.infer<typeof schema>;

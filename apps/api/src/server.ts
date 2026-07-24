@@ -1,3 +1,5 @@
+import { resolve } from 'node:path';
+import fastifyStatic from '@fastify/static';
 import cors from '@fastify/cors';
 import Fastify, { type FastifyInstance } from 'fastify';
 import type { Config } from './config.js';
@@ -22,17 +24,39 @@ export function buildServer({ config, prisma }: ServerDeps): FastifyInstance {
   });
 
   app.register(cors, { origin: config.CORS_ORIGIN });
-
   app.decorate('prisma', prisma);
-
   setupErrorHandler(app);
-  registerHealthRoutes(app);
-  registerEmployeeRoutes(app);
-  registerSalaryRoutes(app);
-  registerInsightsRoutes(app);
-  registerMetaRoutes(app);
+
+  // All application endpoints live under /api, leaving the root free to serve
+  // the frontend in production.
+  app.register(
+    async (api) => {
+      registerHealthRoutes(api);
+      registerEmployeeRoutes(api);
+      registerSalaryRoutes(api);
+      registerInsightsRoutes(api);
+      registerMetaRoutes(api);
+    },
+    { prefix: '/api' },
+  );
+
+  if (config.WEB_DIST_PATH) {
+    serveFrontend(app, config.WEB_DIST_PATH);
+  }
 
   return app;
+}
+
+// Serve the built SPA: real files where they exist, and index.html for any other
+// (non-API) path so client-side routing works on refresh and deep links.
+function serveFrontend(app: FastifyInstance, root: string): void {
+  app.register(fastifyStatic, { root: resolve(root), wildcard: false });
+  app.setNotFoundHandler((request, reply) => {
+    if (request.url.startsWith('/api')) {
+      return reply.status(404).send({ error: 'NotFound', message: 'Route not found' });
+    }
+    return reply.sendFile('index.html');
+  });
 }
 
 declare module 'fastify' {

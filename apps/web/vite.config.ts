@@ -12,13 +12,10 @@ export default defineConfig({
   },
   server: {
     port: 5173,
-    // Proxy API calls in dev so the browser talks to one origin.
+    // Proxy API calls in dev so the browser talks to one origin. The backend
+    // owns the /api prefix, so we forward the path unchanged.
     proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      },
+      '/api': { target: 'http://localhost:3000', changeOrigin: true },
     },
   },
   test: {

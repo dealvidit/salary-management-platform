@@ -17,7 +17,7 @@ beforeAll(async () => {
 afterAll(() => ctx.cleanup());
 
 function post(id: number, body: unknown) {
-  return ctx.app.inject({ method: 'POST', url: `/employees/${id}/salary-revisions`, payload: body });
+  return ctx.app.inject({ method: 'POST', url: `/api/employees/${id}/salary-revisions`, payload: body });
 }
 
 describe('POST /employees/:id/salary-revisions', () => {
