@@ -9,10 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends openssl && rm -
 COPY package*.json ./
 COPY apps/api/package.json apps/api/
 COPY apps/web/package.json apps/web/
-# Resolve a fresh dependency tree for the image's own platform. A lockfile
-# generated on another OS omits that platform's optional rollup/esbuild native
-# binaries (npm/cli#4828), so we drop it here and let npm install the right ones.
-RUN rm -f package-lock.json && npm install --no-audit --no-fund
+RUN npm ci
 
 COPY . .
 RUN npx prisma generate --schema apps/api/prisma/schema.prisma \
