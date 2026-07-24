@@ -1,6 +1,7 @@
 import { BarChart3, LayoutDashboard, Users } from 'lucide-react';
-import type { ComponentType } from 'react';
+import { Suspense, type ComponentType } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
+import { Skeleton } from './ui/skeleton';
 import { cn } from '@/lib/utils';
 
 interface NavItem {
@@ -59,7 +60,9 @@ export function Layout() {
       </aside>
 
       <main className="mx-auto w-full max-w-6xl space-y-6 p-5 md:p-8">
-        <Outlet />
+        <Suspense fallback={<Skeleton className="h-64 w-full" />}>
+          <Outlet />
+        </Suspense>
       </main>
     </div>
   );
